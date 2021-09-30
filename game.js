@@ -26,15 +26,16 @@ class Game{
                 form = new Form()
                 form.display();
             }
+    player1 = createSprite(100,500);
+    player1.addImage("player1",player_img);
+    
+    player2 = createSprite(800,500);
+    player2.addImage("player2", player_img);
 
-            player1 = createSprite(200,500);
-            player1.addImage("player1",player_img);
-            
-            player2 = createSprite(800,500);
-            player2.addImage("player2", player_img);
-            players=[player1,player2];
-
-    }
+    players=[player1,player2];
+player1.collide(player2);
+player2.collide(player1);
+        }
     
     play(){
         
@@ -44,49 +45,43 @@ class Game{
                  image(back_img, 0, 0, 1000, 800);
                  var x =100;
                  var y=200;
-                 var index = 0;
-
+                 var index =0;
                  drawSprites();
                  for(var plr in allPlayers){
                     
-                     
- 
+                    
                      index = index+1;
-                     x = 500 - allPlayers[plr].distance;
-                     y = 500;
-                    
-                    
-                     players[index-1].x = x
-                     players[index-1].y = y
+                     if(index-1<2){
+                     x = 500-allPlayers[plr].distance;
+                     y=500;
+                     
+                     players[index-1].x = x;
+                     players[index-1].y = y;
                        
                      if(index === player.index){
                          
-                         fill("black");
+                        fill("black");
                          textSize(25);
                          text(allPlayers[plr].name ,x-25,y+25);
-                       
                      }
-                     if(index === player.index){
-                         
-                        fill("yellow");
-                        textSize(25);
-
-                       // text(allPlayers.player1.name+": "+allPlayers.player1.score ,25,25);
-                      //  text(allPlayers.player2.name+": "+allPlayers.player2.score ,25,60);
-                        
-                     }
-             }
+                     if (keyIsDown(RIGHT_ARROW) && player.index !== null) {
+                        player.distance -= 10
+                        player.update();
+                    }
+                    if (keyIsDown(LEFT_ARROW) && player.index !== null) {
+                        player.distance += 10
+                        player.update();
+                    }
+                    }
+                    fill("red");
+                    text("Player1:"+player.score,100,100);
+                    text("Player2:"+player.score2,100,150);
+                    
+                 }
                 
-                if (keyIsDown(RIGHT_ARROW) && player.index !== null) {
-                    player.distance -= 10
-                    player.update();
-                }
-                if (keyIsDown(LEFT_ARROW) && player.index !== null) {
-                    player.distance += 10
-                    player.update();
-                }
+                
             
-                if (frameCount % 60 === 0) {
+                 if (frameCount % 80 === 0) {
                      fruits = createSprite(random(100, 1000), 0, 100, 100);
                      fruits.velocityY = 6;
                      var rand = Math.round(random(1,5));
@@ -103,30 +98,27 @@ class Game{
                          break;
                      }
                      fruitGroup.add(fruits);
-                }
-
-                if (player.index !== null) {
-                     //fill code here, to destroy the objects.
-                    for(var i =0; i<fruitGroup.length; i++){
-
-                        var fruit = fruitGroup.get(i);
-
-                        if(fruit.isTouching(player1)){
-                            fruit.destroy();
-                           // player.score = ++score1;
-                            player.update();
-                        }
-
-                        if(fruit.isTouching(player2)){
-                            fruit.destroy();
-                         //   player.score = ++score2;
-                            player.update();
-                        }
-                    }
-                }
+                     
+                 }
+                 
+                  if (player.index !== null) {
+                    if(fruitGroup.isTouching(player1)){
+                        console.log("touched");
+                        fruitGroup.destroyEach();
+                        player.score++;
+                        player.update();
+                  }
+                  if(fruitGroup.isTouching(player2)){
+                    console.log("touched");
+                    fruitGroup.destroyEach();
+                    player.score2++;
+                    player.update();
+              }
+                  }
     }
 
     end(){
        console.log("Game Ended");
     }
+
 }

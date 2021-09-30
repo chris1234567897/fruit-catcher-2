@@ -3,7 +3,8 @@ class Player {
         this.index = null;
         this.distance = 0;
         this.name = null;
-      //  this.score = 0;
+        this.score =0;
+        this.score2=0;
     }
 
     getCount() {
@@ -24,7 +25,7 @@ class Player {
         database.ref(playerIndex).set({
             name: this.name,
             distance: this.distance,
-         //   score:this.score
+            score:this.score,
         });
     }
 
@@ -34,5 +35,6 @@ class Player {
             allPlayers = data.val();
         })
     }
+
     
 }
